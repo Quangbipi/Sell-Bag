@@ -132,7 +132,7 @@ class MainHeader extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  CartView()));
+                                  CartView(userId: int.parse(_authService.getUser()!.id),)));
                     }
                   },
                   child: Stack(

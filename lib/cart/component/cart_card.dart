@@ -126,11 +126,17 @@ class _CartCardState extends State<CartCard> {
                             context.
                             read<CartBloc>().
                             add(ChangeCartStatusEvent(widget.cart.id!, 'waiting'));
+                            context.
+                            read<CartBloc>().
+                            add(GetCartEvent(int.parse(_authService.getUser()!.id)));
                           }
                           if(value == false){
                             context.
                             read<CartBloc>().
                             add(ChangeCartStatusEvent(widget.cart.id!, 'unpaid'));
+                            context.
+                            read<CartBloc>().
+                            add(GetCartEvent(int.parse(_authService.getUser()!.id)));
                           }
                         },
                       ): Text('Đã thanh toán', style: TextStyle(fontSize: 11, color: Colors.grey),),

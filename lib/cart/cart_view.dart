@@ -2,13 +2,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/bloc/cart_bloc.dart';
 import 'package:flutter_login/cart/component/cart_card.dart';
+import 'package:flutter_login/event/cart_event.dart';
 import 'package:flutter_login/models/cart.dart';
 import 'package:flutter_login/models/product.dart';
 import 'package:flutter_login/sate/cart_state.dart';
+import 'package:flutter_login/services/local_auth_service.dart';
 
 class CartView extends StatefulWidget {
 
-  CartView({Key? key}) : super(key: key);
+  int userId;
+  CartView({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<CartView> createState() => _CartViewState();
@@ -16,7 +19,7 @@ class CartView extends StatefulWidget {
 
 class _CartViewState extends State<CartView> {
   double total = 0.0;
-
+  LocalAuthService _authService = LocalAuthService();
   ButtonStyle myButtonStyle() {
     return ButtonStyle(
 
@@ -95,7 +98,16 @@ class _CartViewState extends State<CartView> {
                     ],
                   ),
                   TextButton(
-                    onPressed: (){},
+                    onPressed: (){
+                      print('click check out');
+                      state.cartList.where((cart) => cart.cartStatus == CartStatus.waiting)
+                          .forEach((cart) {
+                        context.read<CartBloc>().add(ChangeCartStatusEvent(cart.id!, 'paid'));
+                        context.
+                        read<CartBloc>().
+                        add(GetCartEvent(widget.userId));
+                      });
+                    },
                     child: const Text('Check out', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                     style: myButtonStyle(),
 
