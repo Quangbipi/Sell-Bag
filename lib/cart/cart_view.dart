@@ -56,6 +56,7 @@ class _CartViewState extends State<CartView> {
                 style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
               ),
             ),
+
             backgroundColor: Colors.white,
             iconTheme: const IconThemeData(color: Colors.black),
 
@@ -88,11 +89,12 @@ class _CartViewState extends State<CartView> {
                             color: Colors.grey
                         ),
                       ),
-                      Text("${state.cartList.where((cart) => cart.cartStatus == CartStatus.waiting)
+                      Text("\$${state.cartList.where((cart) => cart.cartStatus == CartStatus.waiting)
                           .map((cart) => cart.product.tags.first.price * cart.productNumber).fold<double>(0, (a, b) => a + b)}",
                         style: const TextStyle(
                             fontSize: 24,
-                            color: Colors.black
+                            color: Colors.black,
+                          fontWeight: FontWeight.bold
                         ),
                       ),
                     ],

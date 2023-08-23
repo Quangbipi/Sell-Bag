@@ -31,101 +31,104 @@ class LoginPage extends StatelessWidget{
             if(state.loginStatus== LoginStatus.success){
               isLogin = true;
               Navigator.push(context, MaterialPageRoute(
-                builder:(context) =>BottomBar()
+                builder:(context) =>const BottomBar()
               ));
               context
                   .read<CartBloc>()
                   .add(GetCartEvent(int.parse(_authService.getUser()!.id)));
 
             }
-            if(state.loginStatus == LoginStatus.failure && state.errorMessage != null){
+            if(state.errorMessage != "" && state.errorMessage !=null && show
+            ){
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('${state.errorMessage}'),
                 ),
               );
+              context.read<AuthBloc>().add(ErrorStateEvent(""));
             }
-            // if(state.status == LoginStatus.loading){
-            //   Center(
-            //       child: Container(
-            //         margin: EdgeInsets.only(top: 100),
-            //         child: CircularProgressIndicator(),
-            //       )
-            //   );
-            // }
+            show = true;
+
         },
         child:SafeArea(
           child: Scaffold(
-              body: Center(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                      child: Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Stack(
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/Hana.jpg'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Sign in", style: TextStyle(color: Colors.black, fontSize: 32, fontWeight: FontWeight.bold),),
+                        const SizedBox(height: 20,),
+                        SizedBox(
+                          height: 70,
+                          child: _LoginEmail(),
+                        ),
+                        const SizedBox(height: 20,),
+                        SizedBox(
+                          height: 100,
+                          child: _LoginPassword(),
+                        ),
+                        SizedBox(
+                            height: 40,
+                            width: 120,
+                            child: _LoginButton()
+                        ),
+                        const SizedBox(height: 20,),
+                        RichText(
+                          text: TextSpan(
+                              text: 'Don\'t have an account?',
+                              style: const TextStyle(color: Colors.black, fontSize: 14),
                               children: [
-                                Text("Loggin", style: TextStyle(color: Colors.black, fontSize: 32, fontWeight: FontWeight.bold),),
-                                SizedBox(height: 20,),
-                                SizedBox(
-                                  height: 70,
-                                  child: _LoginEmail(),
-                                ),
-                                SizedBox(height: 20,),
-                                SizedBox(
-                                  height: 100,
-                                  child: _LoginPassword(),
-                                ),
-                                SizedBox(
-                                    height: 40,
-                                    width: 120,
-                                    child: _LoginButton()
-                                ),
-                                SizedBox(height: 20,),
-                                RichText(
-                                  text: TextSpan(
-                                      text: 'Don\'t have an account?',
-                                      style: TextStyle(color: Colors.black, fontSize: 14),
-                                      children: [
-                                        TextSpan(
-                                            text: ' Sign up',
-                                            style: TextStyle(color: Colors.blueAccent, fontSize: 14),
-                                            recognizer: TapGestureRecognizer()
-                                            ..onTap = (){
-                                              Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
-                                            }
-                                        )
-                                      ]
-                                  ),
-                                ),
+                                TextSpan(
+                                    text: ' Sign up',
+                                    style: const TextStyle(color: Colors.blueAccent, fontSize: 14),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = (){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
+                                      }
+                                )
+                              ]
+                          ),
+                        ),
 
 
-                              ],
+                      ],
+                    ),
+                  ),
+                  BlocBuilder<AuthBloc, AuthState>(
+                      builder: (context, state){
+                        if(state.loginStatus == LoginStatus.loading){
+                          return Center(
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 100),
+                              child: const CircularProgressIndicator(),
                             ),
-                            BlocBuilder<AuthBloc, AuthState>(
-                                builder: (context, state){
-                                  if(state.loginStatus == LoginStatus.loading){
-                                    return Center(
-                                      child: Container(
-                                        margin: EdgeInsets.only(top: 100),
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    );
+                          );
 
-                                  }
-                                  if(state.loginStatus == LoginStatus.failure ){
-                                    return SizedBox();
-                                  }
-                                  return SizedBox();
+                        }
+                        if(state.loginStatus == LoginStatus.failure ){
+                          return const SizedBox();
+                        }
+                        return const SizedBox();
 
-                            })
-                          ],
-                        )
-                      )
-                  )
-              )
-          ),
+                      })
+                ],
+              ),
+            ),
+          )
         )
         );
 
@@ -166,18 +169,26 @@ class _LoginButton extends StatelessWidget{
               context.read<AuthBloc>().add(LoginWithEmailPasswordEvent(email: state.email.value, password: state.password.value));
 
             } : null,
-            child: Text("Đăng nhập"),
+            child: const Text("Sign in"),
           );
         });
   }
 
 }
 
-class _LoginPassword extends StatelessWidget{
+class _LoginPassword extends StatefulWidget{
 
+  @override
+  State<_LoginPassword> createState() => _LoginPasswordState();
+}
+
+class _LoginPasswordState extends State<_LoginPassword> {
   String _password = "";
 
+  bool showPass = true;
+
   final TextEditingController _passwordController =TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
@@ -187,15 +198,24 @@ class _LoginPassword extends StatelessWidget{
               context.read<AuthBloc>().add(PasswordLoginChangedEvent(password: value));
               _password = state.password.value;
             },
+            obscureText: showPass,
             controller: _passwordController,
             decoration: InputDecoration(
-                hintText: "Nhập mật khẩu",
-                labelText: "Mật khẩu",
+                hintText: "Enter password",
+                labelText: "Password",
+                suffixIcon: IconButton(
+                  onPressed: (){
+                    setState(() {
+                      showPass = !showPass;
+                    });
+                  },
+                  icon: const Icon(Icons.remove_red_eye_outlined),
+                ),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10)
                 ),
-                contentPadding: EdgeInsets.only(left: 10),
-                errorText: !state.password.isValid && state.password.value.length > 0 ? "Mật khẩu > 6" : null
+                contentPadding: const EdgeInsets.only(left: 10),
+                errorText: !state.password.isValid && state.password.value.length > 0 ? "Password > 6 characters" : null
             ),
 
 
@@ -203,13 +223,17 @@ class _LoginPassword extends StatelessWidget{
 
     });
   }
-
 }
-class _LoginEmail extends StatelessWidget{
+class _LoginEmail extends StatefulWidget{
+  @override
+  State<_LoginEmail> createState() => _LoginEmailState();
+}
 
+class _LoginEmailState extends State<_LoginEmail> {
+  String _email = "";
 
   final TextEditingController _accountController =TextEditingController();
-  String _email = "";
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
@@ -221,20 +245,17 @@ class _LoginEmail extends StatelessWidget{
             },
             controller: _accountController,
             decoration: InputDecoration(
-                hintText: "Nhập tên tài khoản",
-                labelText: "Tài khoản",
+                hintText: "Enter email",
+                labelText: "Email",
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10)
                 ),
-                contentPadding: EdgeInsets.only(left: 10),
-                errorText: !state.email.isValid && state.email.value.length >0 ? "Email không hợp lệ" : null
+                contentPadding: const EdgeInsets.only(left: 10),
+                errorText: !state.email.isValid && state.email.value.length >0 ? "Invalid email" : null
             ),
-
-
           );
 
         });
   }
-
 }
 

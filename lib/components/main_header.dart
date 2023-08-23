@@ -11,20 +11,29 @@ import 'package:flutter_login/event/cart_event.dart';
 import 'package:flutter_login/event/product_event.dart';
 import 'package:flutter_login/event/search_event.dart';
 import 'package:flutter_login/event/tab_event.dart';
+import 'package:flutter_login/login_page.dart';
+import 'package:flutter_login/models/cart.dart';
 import 'package:flutter_login/sate/auth_state.dart';
 import 'package:flutter_login/sate/cart_state.dart';
-import 'package:flutter_login/sate/login_sate.dart';
-import 'package:flutter_login/sate/product_state.dart';
 import 'package:flutter_login/sate/search_state.dart';
 import 'package:flutter_login/services/local_auth_service.dart';
 
 import '../bloc/tab_bloc.dart';
 import '../const.dart';
 
-class MainHeader extends StatelessWidget {
+class MainHeader extends StatefulWidget {
+  @override
+  State<MainHeader> createState() => _MainHeaderState();
+}
+
+class _MainHeaderState extends State<MainHeader> {
   String _searchInput = "";
+
   TextEditingController _searchController = TextEditingController();
+
   final LocalAuthService _authService = LocalAuthService();
+
+  String paid = 'paid';
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +53,7 @@ class MainHeader extends StatelessWidget {
               blurRadius: 10,
             )
           ]),
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Row(
             children: [
               Expanded(
@@ -71,13 +80,13 @@ class MainHeader extends StatelessWidget {
                               context
                                   .read<TabBloc>()
                                   .add(TabChange(indextInput: 1));
-                              print(state.input);
+
                               _searchController.text = state.input;
                             },
                             decoration: InputDecoration(
                                 prefixIcon: const Icon(
                                     FluentSystemIcons.ic_fluent_search_filled),
-                                hintText: "Tìm kiếm",
+                                hintText: "Search",
                                 border: const UnderlineInputBorder(
                                   borderSide: BorderSide.none,
                                 ),
@@ -114,16 +123,15 @@ class MainHeader extends StatelessWidget {
                         blurRadius: 8,
                       )
                     ]),
-                padding: EdgeInsets.all(12),
-                child: Icon(FluentSystemIcons.ic_fluent_filter_filled),
+                padding: const EdgeInsets.all(12),
+                child: const Icon(FluentSystemIcons.ic_fluent_filter_filled),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               BlocBuilder<CartBloc, CartState>(builder: (context, state) {
                 return InkWell(
                   onTap: () {
-                    print(isLogin);
                     if (isLogin == true ) {
                       context
                           .read<CartBloc>()
@@ -133,6 +141,8 @@ class MainHeader extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) =>
                                   CartView(userId: int.parse(_authService.getUser()!.id),)));
+                    }else{
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                     }
                   },
                   child: Stack(
@@ -149,8 +159,8 @@ class MainHeader extends StatelessWidget {
                                 blurRadius: 8,
                               )
                             ]),
-                        padding: EdgeInsets.all(12),
-                        child: Icon(Icons.shopping_cart),
+                        padding: const EdgeInsets.all(12),
+                        child: const Icon(Icons.shopping_cart),
                       ),
                       Positioned(
                           top: 4,
@@ -176,7 +186,7 @@ class MainHeader extends StatelessWidget {
                                     children: [
                                       if (state is GetCartSuccess)
                                         Text(
-                                          state.cartList.length.toString(),
+                                          state.cartList.where((cart) => cart.cartStatus == CartStatus.unpaid || cart.cartStatus == CartStatus.waiting).toList().length.toString(),
                                           style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,

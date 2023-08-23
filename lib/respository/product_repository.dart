@@ -16,7 +16,7 @@ class ProductRepository {
       .timeout(Duration(seconds: 5))
       .then((response){
         if(response.statusCode == 200){
-          print(response.body.toString());
+          //print(response.body.toString());
           final products = productListFromJson(response.body);
           _localProductService.assigAllProducts(products: productListFromJson(response.body));
           return productListFromJson(response.body);
@@ -34,7 +34,7 @@ class ProductRepository {
     try {
       final response = await client.get(
         Uri.parse('$remoteUrl?populate=images,tags&filters[name][\$contains]=$keyword'),
-      ).timeout(Duration(seconds: 5));
+      ).timeout(Duration(seconds: 15));
 
       if (response.statusCode == 200) {
         final data = productListFromJson(response.body);
@@ -52,7 +52,9 @@ class ProductRepository {
     try {
       final response = await client.get(
         Uri.parse('$remoteUrl?populate=images,tags&filters[category][id]=$id'),
-      ).timeout(Duration(seconds: 5));
+      ).catchError((onError){
+        print(onError.toString());
+      });
 
       if (response.statusCode == 200) {
         final data = productListFromJson(response.body);
@@ -60,8 +62,8 @@ class ProductRepository {
       } else {
         throw Exception('Request failed with status code ${response.statusCode}');
       }
-    } finally {
-      client.close();
+    }catch(e){
+      print(e.toString());
     }
   }
 }

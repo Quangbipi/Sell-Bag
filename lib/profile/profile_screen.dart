@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_login/about_us/about_us_screen.dart';
 import 'package:flutter_login/bloc/auth_bloc.dart';
 import 'package:flutter_login/event/auth_event.dart';
 import 'package:flutter_login/login_page.dart';
@@ -7,6 +8,8 @@ import 'package:flutter_login/profile/profile_detail.dart';
 import 'package:flutter_login/sate/auth_state.dart';
 import 'package:flutter_login/sate/login_sate.dart';
 import 'package:flutter_login/services/local_auth_service.dart';
+import 'package:flutter_login/setting/setting_view.dart';
+import 'package:flutter_login/terms_service/terms_of_service.dart';
 
 import '../const.dart';
 class ProfileScreen extends StatefulWidget {
@@ -36,6 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               const SizedBox(height: 20,),
               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const CircleAvatar(
                     backgroundColor: Colors.grey,
@@ -47,13 +51,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   ),
                   const SizedBox(width: 12,),
-                  Text(
+                  Expanded(child: Text(
                     state.loginStatus == LoginStatus.success ? state.userModel!.fullName :'Sign in your account ',
                     style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold
                     ),
-                  ),
+                    maxLines: 1,
+
+                  )),
                 ],
               ),
               const SizedBox(height: 40,),
@@ -72,7 +78,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           context,
                           MaterialPageRoute(builder: (context) => LoginPage()));
                     }
-
                   }
               ),
               buildProfileCard(
@@ -84,19 +89,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
               buildProfileCard(
                   title: "Settings",
                   onClick: (){
+                    Navigator.push(
+                        context, MaterialPageRoute(
+                        builder: (context) => SettingView()));
 
                   }
               ),
               buildProfileCard(
                   title: "About us",
                   onClick: (){
-
+                    Navigator.push(
+                        context, MaterialPageRoute(
+                        builder: (context) => AboutUsScreen()));
                   }
               ),
               buildProfileCard(
                   title: "Terms of service",
                   onClick: (){
-
+                    Navigator.push(
+                        context, MaterialPageRoute(
+                        builder: (context) => const TermOfService()));
                   }
               ),
               buildProfileCard(

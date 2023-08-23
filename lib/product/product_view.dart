@@ -23,10 +23,11 @@ class _ProductViewState extends State<ProductView> {
 
   @override
   void initState() {
-    print(isSearching);
+    print('initState: $isSearching ');
     if(isSearching == false){
       context.read<ProductBloc>().add(LoadProductEvent());
     }
+
     super.initState();
   }
   @override
@@ -39,7 +40,9 @@ class _ProductViewState extends State<ProductView> {
                 child: BlocBuilder<ProductBloc, ProductState>(
                   builder: (context,state){
                     if(state is SearchProductComplete ){
-                      isSearching = false;
+                      if(state.products.isNotEmpty){
+                        isSearching = false;
+                      }
                       return ProductGrid(products: state.products);
                     }
                     else if(state is ProductLoaded ) {
@@ -49,7 +52,7 @@ class _ProductViewState extends State<ProductView> {
                       return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: const [
                             Icon(Icons.error_outline, size: 64, color: Colors.redAccent,),
                             SizedBox(height: 10,),
                             Text("Product not found!", style: TextStyle(color: Colors.redAccent),),
@@ -57,7 +60,7 @@ class _ProductViewState extends State<ProductView> {
                         )
                       );
                     }else{
-                      return ProductLoadingGrid();
+                      return const ProductLoadingGrid();
                     }
                   },
                 ))

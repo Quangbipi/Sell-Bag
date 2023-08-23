@@ -29,7 +29,7 @@ class ProductCarouselCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     child: AspectRatio(
-                      aspectRatio: 1.5,
+                      aspectRatio: 16/9,
                       child: Container(
                         color: Colors.white,
                       ),

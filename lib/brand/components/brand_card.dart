@@ -67,8 +67,10 @@ class _BrandCardState extends State<BrandCard> {
                       alignment: Alignment(1, 1),
                       child: InkWell(
                         onTap: (){
+                          print(isSearching);
                           isSearching = true;
                           context.read<TabBloc>().add(TabChange(indextInput: 1));
+                          print(isSearching);
                           context.read<ProductBloc>().add(SearchProductByBrandEvent(widget.category.id));
 
                         },

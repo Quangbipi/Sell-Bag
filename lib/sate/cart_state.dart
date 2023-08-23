@@ -21,37 +21,11 @@ enum ChangeStatusCart{
 
 class CartState extends Equatable{
 
-  // final GetCartStatus getCartStatus;
-  // final AddCartStatus addCartStatus;
-  // final ChangeStatusCart changeStatusCart;
-  // final String? errString;
-  // final List<Cart>? cartList;
-  // CartState({
-  //   this.getCartStatus = GetCartStatus.failed,
-  //   this.addCartStatus = AddCartStatus.failed,
-  //   this.changeStatusCart = ChangeStatusCart.failed,
-  //   this.errString,
-  //   this.cartList
-  // });
+
   @override
   // TODO: implement props
   List<Object?> get props => [];
 
-  // CartState copyWith({
-  //   GetCartStatus? getCartStatus,
-  //   AddCartStatus? addCartStatus,
-  //   ChangeStatusCart? changeStatusCart,
-  //   String? errString,
-  //   List<Cart>? cartList
-  // }){
-  //   return CartState(
-  //     getCartStatus: getCartStatus ?? this.getCartStatus,
-  //     addCartStatus: addCartStatus ?? this.addCartStatus,
-  //     changeStatusCart: changeStatusCart ?? this.changeStatusCart,
-  //     errString: errString ?? this.errString,
-  //     cartList: cartList ?? this.cartList,
-  //   );
-  // }
 }
 
 class AddToCartLoading extends CartState{
@@ -106,10 +80,33 @@ class GetCartFailed extends CartState{
 class ChangStatusCartSuccess extends CartState{
   final CartStatus cartStatus;
   ChangStatusCartSuccess(this.cartStatus);
+  @override
+  // TODO: implement props
+  List<Object?> get props => [cartStatus];
 }
 
 class ChangStatusCartFailed extends CartState{
   String errString;
 
   ChangStatusCartFailed(this.errString);
+  @override
+  // TODO: implement props
+  List<Object?> get props => [errString];
+}
+
+class DeleteCartSuccess extends CartState{
+
+  DeleteCartSuccess();
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+class DeleteCartFailed extends CartState{
+  String errString;
+
+  DeleteCartFailed(this.errString);
+  @override
+  // TODO: implement props
+  List<Object?> get props => [errString];
 }

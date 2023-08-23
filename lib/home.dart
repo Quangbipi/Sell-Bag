@@ -54,46 +54,44 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+
           body: Column(
             children: [
               MainHeader(),
               Expanded(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
                         BlocBuilder<BannerBloc, BannerState>(
                             builder: (context, state){
                               if(state is BannerLoaded){
-
                                 return CarouselSliderView(adBannerList: state.bannerList);
-
-
                               }else if(state is BannerLoading){
 
-                                return BannerView();
+                                return const BannerView();
                               }else{
-                                return BannerView();
+                                return const BannerView();
                               }
                             }
                         ),
-                        SectionTitle(title: 'Brand',),
+                        SectionTitle(title: 'Brand', check: 0,),
                         BlocBuilder<CategoryBloc, CategoryState>(
                             builder: (context, state){
                               if(state is CategoryLoaded){
                                 return PopularCategory(categories: state.categoryList,);
                               }else{
-                                return PopularCategoryLoading();
+                                return const PopularCategoryLoading();
                               }
                             }),
-                        SectionTitle(title: 'Popular product'),
+                        SectionTitle(title: 'Popular product', check: 1,),
                         BlocBuilder<PopularProductBloc, PopularProductState>(
                             builder: (context,state){
                               if(state is PopularProductLoaded) {
                                 return PopularProduct(productList: state.productList,);
                               }else {
-                                return PopularProductLoadingView();
+                                return const PopularProductLoadingView();
                               }
                             })
                       ],

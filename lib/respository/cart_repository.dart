@@ -61,4 +61,9 @@ class CartRepository {
       print("lỗi");
     }
   }
+
+  Future<dynamic> DeleteCart({required int id})async{
+    var response = await client.delete(Uri.parse('$baseUrl/api/carts/$id'));
+    return response;
+  }
 }

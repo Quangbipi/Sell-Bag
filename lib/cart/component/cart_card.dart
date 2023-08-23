@@ -34,116 +34,135 @@ class _CartCardState extends State<CartCard> {
         listener: (context, state){
 
         },
-      child: Padding(
-        padding: const EdgeInsets.only(left: 12, right: 12, top: 18),
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          decoration:  BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade500,
-                  offset: const Offset(0, 2), // Điều chỉnh tọa độ đổ bóng theo chiều ngang và dọc
-                  blurRadius: 6, // Điều chỉnh độ mờ của đổ bóng
-                  spreadRadius: 0, // Điều chỉnh độ lan rộng của đổ bóng
-                ),
-
-              ],
-              borderRadius: BorderRadius.circular(12)
-          ),
-          height: 120,
-          child: Row(
+      child: Dismissible(
+        key: Key((widget.cart.id).toString()),
+        background: Container(
+          color: Colors.red,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Flexible(
-                flex: 1,
-                fit: FlexFit.tight,
-                child: CachedNetworkImage(
-                  imageUrl: baseUrl + widget.cart.product.image.first,
-                  placeholder: (context, url) =>  Shimmer.fromColors(
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.white,
-                    child: Center(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        color: Colors.grey.shade300,
+              Icon(Icons.delete_forever_outlined, size: 40, color: Colors.white,),
+              Text("Delete", style: TextStyle(color: Colors.white),)
+            ],
+          ),// Màu nền hiển thị khi vuốt đi
+        ),
+        onDismissed: (DismissDirection direction){
+          context.read<CartBloc>().add(DeleteCartEvent(widget.cart.id!));
+          context.
+          read<CartBloc>().
+          add(GetCartEvent(widget.cart.userId));
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, top: 18),
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration:  BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade500,
+                    offset: const Offset(0, 2), // Điều chỉnh tọa độ đổ bóng theo chiều ngang và dọc
+                    blurRadius: 6, // Điều chỉnh độ mờ của đổ bóng
+                    spreadRadius: 0, // Điều chỉnh độ lan rộng của đổ bóng
+                  ),
 
+                ],
+                borderRadius: BorderRadius.circular(12)
+            ),
+            height: 120,
+            child: Row(
+              children: [
+                Flexible(
+                  flex: 1,
+                  fit: FlexFit.tight,
+                  child: CachedNetworkImage(
+                    imageUrl: baseUrl + widget.cart.product.image.first,
+                    placeholder: (context, url) =>  Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.white,
+                      child: Center(
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          color: Colors.grey.shade300,
+
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, erro) => Center(
+                      child: Icon(
+                        Icons.error_outline,
+                        color: Colors.grey.shade300,
                       ),
                     ),
                   ),
-                  errorWidget: (context, url, erro) => Center(
-                    child: Icon(
-                      Icons.error_outline,
-                      color: Colors.grey.shade300,
-                    ),
-                  ),
                 ),
-              ),
-              const SizedBox(width: 20,),
-              Flexible(
-                flex: 2,
-                fit: FlexFit.tight,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Name: ${widget.cart.product.name}',style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black
-                    ),
-                      maxLines: 1, ),
-                    Text('Title: ${widget.cart.product.tags.first.title}',style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey
-                    ),
-                      maxLines: 1, ),
-                    Text('Amount: ${widget.cart.productNumber}',style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey
-                    ),
-                      maxLines: 1, ),
-                    Text('Price: \$${widget.cart.product.tags.first.price * widget.cart.productNumber}',style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey
-                    ),
-                      maxLines: 1, ),
-
-                  ],
-                ),
-              ),
-              Flexible(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                const SizedBox(width: 20,),
+                Flexible(
+                  flex: 2,
+                  fit: FlexFit.tight,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      widget.cart.cartStatus == CartStatus.waiting || widget.cart.cartStatus == CartStatus.unpaid
-                          ? Checkbox(
-                        value: widget.cart.cartStatus == CartStatus.waiting ? true:false ,
-                        onChanged: (value) {
+                      Text('Name: ${widget.cart.product.name}',style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black
+                      ),
+                        maxLines: 1, ),
+                      Text('Title: ${widget.cart.product.tags.first.title}',style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey
+                      ),
+                        maxLines: 1, ),
+                      Text('Amount: ${widget.cart.productNumber}',style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey
+                      ),
+                        maxLines: 1, ),
+                      Text('Price: \$${widget.cart.product.tags.first.price * widget.cart.productNumber}',style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey
+                      ),
+                        maxLines: 1, ),
 
-                          if(value == true){
-                            context.
-                            read<CartBloc>().
-                            add(ChangeCartStatusEvent(widget.cart.id!, 'waiting'));
-                            context.
-                            read<CartBloc>().
-                            add(GetCartEvent(int.parse(_authService.getUser()!.id)));
-                          }
-                          if(value == false){
-                            context.
-                            read<CartBloc>().
-                            add(ChangeCartStatusEvent(widget.cart.id!, 'unpaid'));
-                            context.
-                            read<CartBloc>().
-                            add(GetCartEvent(int.parse(_authService.getUser()!.id)));
-                          }
-                        },
-                      ): Text('Đã thanh toán', style: TextStyle(fontSize: 11, color: Colors.grey),),
                     ],
                   ),
-                ),)
-            ],
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        widget.cart.cartStatus == CartStatus.waiting || widget.cart.cartStatus == CartStatus.unpaid
+                            ? Checkbox(
+                          value: widget.cart.cartStatus == CartStatus.waiting ? true:false ,
+                          onChanged: (value) {
+
+                            if(value == true){
+                              context.
+                              read<CartBloc>().
+                              add(ChangeCartStatusEvent(widget.cart.id!, 'waiting'));
+                              context.
+                              read<CartBloc>().
+                              add(GetCartEvent(int.parse(_authService.getUser()!.id)));
+                            }
+                            if(value == false){
+                              context.
+                              read<CartBloc>().
+                              add(ChangeCartStatusEvent(widget.cart.id!, 'unpaid'));
+                              context.
+                              read<CartBloc>().
+                              add(GetCartEvent(int.parse(_authService.getUser()!.id)));
+                            }
+                          },
+                        ): Text('Đã thanh toán', style: TextStyle(fontSize: 11, color: Colors.grey),),
+                      ],
+                    ),
+                  ),)
+              ],
+            ),
           ),
         ),
       )

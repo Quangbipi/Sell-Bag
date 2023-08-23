@@ -9,6 +9,7 @@ import 'package:flutter_login/bloc/product_bloc.dart';
 import 'package:flutter_login/bloc/search_bloc.dart';
 import 'package:flutter_login/bloc/sign_up_bloc.dart';
 import 'package:flutter_login/bloc/tab_bloc.dart';
+import 'package:flutter_login/bloc/theme_bloc.dart';
 
 class LoginObserver extends BlocObserver{
     @override
@@ -39,9 +40,9 @@ class LoginObserver extends BlocObserver{
     // if(bloc is SearchBloc){
     //   print("Change: $change");
     // }
-    // if(bloc is AuthBloc){
-    //   print("Change: $change");
-    // }
+    if(bloc is AuthBloc){
+      print("Change: $change");
+    }
     if(bloc is CartBloc){
       print("Change: $change");
     }
@@ -75,7 +76,7 @@ class LoginObserver extends BlocObserver{
     // if(bloc is AuthBloc){
     //   print("Transition: $transition");
     // }
-    if(bloc is CartBloc){
+    if(bloc is ThemeBloc){
       print("Transition: $transition");
     }
   }

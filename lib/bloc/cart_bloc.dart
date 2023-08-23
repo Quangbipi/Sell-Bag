@@ -17,6 +17,7 @@ class CartBloc extends Bloc<CartEvent, CartState>{
     on<AddToCartEvent>(_handlerAddToCartEvent);
     on<GetCartEvent>(_handlerGetCartEvent);
     on<ChangeCartStatusEvent>(_handlerChangeStatus);
+    on<DeleteCartEvent>(_handlerDeleteCart);
   }
 
 
@@ -72,6 +73,18 @@ class CartBloc extends Bloc<CartEvent, CartState>{
       print(e.toString());
       emit(ChangStatusCartFailed(e.toString()));
       //emit(state.copyWith(changeStatusCart: ChangeStatusCart.failed, errString: e.toString()));
+    }
+  }
+
+  FutureOr<void> _handlerDeleteCart(
+      DeleteCartEvent event, Emitter<CartState> emit) async{
+    final response = await _cartRepository.DeleteCart(id: event.id);
+
+    if(response.statusCode == 200){
+      emit(DeleteCartSuccess());
+
+    }else{
+      emit(DeleteCartFailed('Lỗi'));
     }
   }
 }

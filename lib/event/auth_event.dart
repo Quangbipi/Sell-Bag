@@ -85,3 +85,8 @@ class UpdateProfileEvent extends AuthEvent{
       this.birthday,
       );
 }
+
+class ErrorStateEvent extends AuthEvent{
+  final String error ;
+  ErrorStateEvent(this.error);
+}

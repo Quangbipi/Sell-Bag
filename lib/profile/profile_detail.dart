@@ -1,3 +1,8 @@
+
+
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluentui_icons/fluentui_icons.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_login/bloc/auth_bloc.dart';
 import 'package:flutter_login/const.dart';
 import 'package:flutter_login/event/auth_event.dart';
-
+import 'dart:io';
 import 'package:flutter_login/styles/my_button_style.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
@@ -24,6 +29,18 @@ class _ProfileDetailState extends State<ProfileDetail> {
   late TextEditingController _name;
   late TextEditingController _dob;
   late TextEditingController _email;
+  File? _imageFile;
+  // final ImagePicker _imagePicker = ImagePicker();
+  // void _pickImageBase64() async{
+  //   final XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
+  //   if(image==null){
+  //     return;
+  //   }
+  //   Uint8List imageByte = await image!.readAsBytes();
+  //   String _base64 = base64.encode(imageByte);
+  //   print(_base64);
+  //
+  // }
   DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
   late bool change = false;
   void _showTimePicker() async {
@@ -244,6 +261,16 @@ class _ProfileDetailState extends State<ProfileDetail> {
                     const SizedBox(
                       height: 20,
                     ),
+                    // TextButton(
+                    //     style: myButtonStyle(140, 40),
+                    //     onPressed:  () {
+                    //       _pickImageBase64();
+                    //       },
+                    //     child: const Text(
+                    //       'Save',
+                    //       style: TextStyle(
+                    //           fontWeight: FontWeight.bold, fontSize: 20),
+                    //     ))
                   ],
                 ),
               ),

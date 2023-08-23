@@ -26,20 +26,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignOutEvent>(_handlerSignOut);
     on<PasswordLoginChangedEvent>(_handlerPasswordLoginChangedEvent);
     on<UpdateProfileEvent>(_handlerUpdateProfileEvent);
+    on<ErrorStateEvent>(_handlerError);
   }
 
   FutureOr<void> _handlerEmailChangedEvent(
       EmailChangedEvent event, Emitter<AuthState> emit) async {
     final email = Email.dirty(event.email);
     emit(state.copyWith(
-        email: email, isValid: Formz.validate([email, state.password])));
+        email: email,
+        isValid: Formz.validate([email, state.password])
+    ));
   }
 
   FutureOr<void> _handlerPasswordChangedEvent(
       PasswordChangedEvent event, Emitter<AuthState> emit) async {
     final password = Password.dirty(event.password);
     emit(state.copyWith(
-        password: password, isValid: Formz.validate([state.email, password])));
+        password: password,
+        isValid: Formz.validate([state.email, password]),
+    ));
     final confirmPassword =
         ConfirmPassword.dirty(event.password, state.confirmPassword.value);
     emit(
@@ -119,12 +124,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           print("Đăng nhập lỗi 1 ${userResult.statusCode}");
         }
       } else {
+        emit(state.copyWith(errorMessage: "Sign in failed", loginStatus: LoginStatus.failure));
         print("Đăng nhập lỗi2 ${response.statusCode}");
       }
     } catch (e) {
       emit(state.copyWith(
-          errorMessage: "Đăng nhập thất bại",
-          signUpStatus: SignUpStatus.failure));
+          errorMessage: "Sign in failed",
+          loginStatus: LoginStatus.failure));
     }
   }
 
@@ -155,5 +161,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(state.copyWith(updateProfileStatus: UpdateProfileStatus.failure));
       print(e.toString());
     }
+  }
+
+  FutureOr<void> _handlerError(ErrorStateEvent event, Emitter<AuthState> emit) {
+
+    emit(state.copyWith(errorMessage: event.error));
   }
 }

@@ -10,6 +10,7 @@ import 'package:flutter_login/bloc/product_bloc.dart';
 import 'package:flutter_login/bloc/search_bloc.dart';
 import 'package:flutter_login/bloc/sign_up_bloc.dart';
 import 'package:flutter_login/bloc/tab_bloc.dart';
+import 'package:flutter_login/bloc/theme_bloc.dart';
 import 'package:flutter_login/bottom_bar.dart';
 import 'package:flutter_login/cart/cart_view.dart';
 import 'package:flutter_login/event/banner_event.dart';
@@ -48,8 +49,6 @@ class MyApp extends StatelessWidget{
               create: (context)=> AuthenticationRepository()),
           RepositoryProvider<CartRepository>(
               create: (context)=> CartRepository()),
-
-
         ],
         child: MultiBlocProvider(
           providers: [
@@ -77,7 +76,8 @@ class MyApp extends StatelessWidget{
             BlocProvider(create: (context) => AuthBloc(
                 RepositoryProvider.of<AuthenticationRepository>(context))),
             BlocProvider(create: (context) => CartBloc(
-                RepositoryProvider.of(context)))
+                RepositoryProvider.of(context))),
+            BlocProvider(create: (context) => ThemeBloc()),
           ],
 
           child:  MaterialApp(
@@ -85,8 +85,7 @@ class MyApp extends StatelessWidget{
             home: BottomBar()
           ),
 
-        ))
-    ;
+        ));
   }
 
 }

@@ -45,3 +45,15 @@ class ChangeCartStatusEvent extends CartEvent{
   List<Object?> get props => [id,cartStatus];
 
 }
+
+class DeleteCartEvent extends CartEvent{
+  int id;
+
+  DeleteCartEvent(this.id);
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [id];
+
+
+}
